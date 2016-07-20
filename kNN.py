@@ -26,24 +26,31 @@ def classify0(inx, dataSet, labels, k):
     return sortedClassCount[0][0]
 
 
+def file2matrix(filename):
+    fr = open(filename)
+    arrayOLines = fr.readlines()
+    numOfLines = len(arrayOLines)
+    returnMat = zeros((numOfLines,3))
+    classLabelVector = []
+    index = 0
 
+    for line in arrayOLines:
+        line = line.strip()
+        listLine = line.split('\t')
+        returnMat[index, :] = listLine[0:3]
+        classLabelVector.append(int(listLine[-1]))
+        index+=1
+    return returnMat,classLabelVector #classLabelVector是一个numpy数组
 
+def autoNorm(dataSet):
+    minVals = dataSet.min(0)
+    maxVals = dataSet.max(0)
+    ranges = maxVals - minVals
+    normDataSet = zeros(shape(dataSet))
+    m = dataSet.shape[0]
+    normDataSet = dataSet-tile(minVals,(m,1))
+    normDataSet = normDataSet/tile(ranges,(m,1))
+    return normDataSet,ranges,minVals
 
-def cll(x, dataSet, labels, k):
-    nx = tile(x, (dataSet.shape[0], 1))
-    diffxd = nx - dataSet
-    diffxd = diffxd ** 2
-    diffxd = diffxd.sum(axis=1)
-    diffxd = diffxd ** 0.5
-    diffsort = diffxd.argsort()
-
-    data = {}  # tuple
-
-    for i in range(k):
-        v = labels[diffsort[i]]
-        data[v] = data.get(v, 0) + 1
-    rdata = sorted(data.iteritems(), key=operator.itemgetter(1), reverse=True)
-    return rdata[0][0]
-
-group, labels = createDataSet()
-print classify0([0, 0], group, labels, 3)
+# group, labels = createDataSet()
+# print classify0([0, 0], group, labels, 3)
