@@ -30,7 +30,7 @@ def file2matrix(filename):
     fr = open(filename)
     arrayOLines = fr.readlines()
     numOfLines = len(arrayOLines)
-    returnMat = zeros((numOfLines,3))
+    returnMat = zeros((numOfLines, 3))
     classLabelVector = []
     index = 0
 
@@ -39,8 +39,9 @@ def file2matrix(filename):
         listLine = line.split('\t')
         returnMat[index, :] = listLine[0:3]
         classLabelVector.append(int(listLine[-1]))
-        index+=1
-    return returnMat,classLabelVector #classLabelVector是一个numpy数组
+        index += 1
+    return returnMat, classLabelVector  # classLabelVector是一个numpy数组
+
 
 def autoNorm(dataSet):
     minVals = dataSet.min(0)
@@ -48,9 +49,18 @@ def autoNorm(dataSet):
     ranges = maxVals - minVals
     normDataSet = zeros(shape(dataSet))
     m = dataSet.shape[0]
-    normDataSet = dataSet-tile(minVals,(m,1))
-    normDataSet = normDataSet/tile(ranges,(m,1))
-    return normDataSet,ranges,minVals
+    normDataSet = dataSet - tile(minVals, (m, 1))
+    normDataSet = normDataSet / tile(ranges, (m, 1))
+    return normDataSet, ranges, minVals
 
+
+def img2vector(filename):
+    retvec = zeros((1, 1024))
+    fr = open(filename)
+    for i in range(32):
+        line = fr.readline()
+        for j in range(32):
+            retvec[0, i * 32 + j] = int(line[j])
+    return retvec
 # group, labels = createDataSet()
 # print classify0([0, 0], group, labels, 3)

@@ -29,4 +29,6 @@ def datingClassTest(ratio):
     print "err is %.2f%%" % (((errcount / float(totalNum)) * 100))
 
 #plotData(0.1)
-datingClassTest(0.1)
+#datingClassTest(0.1)
+ver = img2vector('trainingDigits/0_0.txt')
+print ver
