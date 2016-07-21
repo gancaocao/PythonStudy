@@ -1,0 +1,5 @@
+from kNN import *
+
+
+
+createDataSet()
