@@ -2,7 +2,7 @@
 
 from math import log
 import operator
-
+import treePlotter
 
 # 计算香浓熵
 def calcShannonEnt(dataSet):
@@ -108,4 +108,10 @@ def test():
     tree = createTree(dataSet,labels)
     print classfy(tree,featLabels,[1,1])
 
-test()
+def test2():
+    fr = open('lenses.txt')
+    leses = [inst.strip().split('\t') for inst in fr.readlines()]
+    lesesLabels=['age','prescript','astigmatic','tearRate']
+    lesesTree = createTree(leses,lesesLabels)
+    treePlotter.createPlot(lesesTree)
+test2()

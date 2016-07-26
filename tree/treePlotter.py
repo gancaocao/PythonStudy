@@ -4,7 +4,7 @@ Created on Oct 14, 2010
 @author: Peter Harrington
 '''
 import matplotlib.pyplot as plt
-from trees import *
+
 decisionNode = dict(boxstyle="sawtooth", fc="0.8")
 leafNode = dict(boxstyle="round4", fc="0.8")
 arrow_args = dict(arrowstyle="<-")
@@ -99,21 +99,3 @@ def retrieveTree(i):
                    ]
     return listOfTrees[i]
 
-
-
-
-
-
-
-
-
-dataSet = [[1, 1, 'yes'],
-           [1, 1, 'yes'],
-           [1, 0, 'no'],
-           [0, 1, 'no'],
-           [0, 1, 'no'],
-           [3,1,'maybe']]
-
-labels = ['no surfacing', 'flippers']
-thisTree = createTree(dataSet, labels)
-createPlot(thisTree)
