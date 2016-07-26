@@ -85,7 +85,16 @@ def createTree(dataSet, labels):
 
 #对数据进行分类
 def classfy(inputTree, featLabels, testVec):
-
+    firstStr = inputTree.keys()[0]
+    dict = inputTree[firstStr]
+    featIndex = featLabels.index(firstStr)
+    for key in dict.keys():
+        if testVec[featIndex]==key:
+            if type(dict[key]).__name__=='dict':
+                classLabel = classfy(dict[key],featLabels,testVec)
+            else:
+                classLabel = dict[key]
+            return classLabel
 
 
 def test():
@@ -95,7 +104,8 @@ def test():
                [0, 1, 'no'],
                [0, 1, 'no']]
     labels = ['no surfacing','flippers']
-    print createTree(dataSet,labels)
-
+    featLabels = ['no surfacing','flippers']
+    tree = createTree(dataSet,labels)
+    print classfy(tree,featLabels,[1,1])
 
 test()
