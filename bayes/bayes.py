@@ -24,6 +24,13 @@ def setOfWords2Vec(vocabList, inputSet):
             returnVec[vocabList.index(word)] = 1
     return returnVec
 
+def bagOfWords2Vec(vocabList, inputSet):
+    returnVec = [0] * len(vocabList)
+    for word in inputSet:
+        if word in vocabList:
+            returnVec[vocabList.index(word)] += 1
+    return returnVec
+
 def trainNB0(trainMatrix,trainCategory):
     numDocs = len(trainMatrix)
     numWords = len(trainMatrix[0])
@@ -46,12 +53,45 @@ def trainNB0(trainMatrix,trainCategory):
 def classifyNB(vec2classify,p0vec,p1vec,pclass1):
     p1 = sum(vec2classify*p1vec) + log(pclass1)
     p0 = sum(vec2classify*p0vec) + log(1.0-pclass1)
-    return p1,p0
-'''   if p1>p0:
-        return p
+    if p1>p0:
+        return 1
     else:
         return 0
-'''
+
+def textParse(bigString):
+    import re
+    listOfTokens = re.split(r'\W*',bigString)
+    return [tok.lower() for tok in listOfTokens if len(tok) > 2]
+def spamTest():
+    docList = []; classList = []; fullText = []
+    for i in range(1,26):
+        wordList = textParse(open('email/spam/%d.txt' %i).read())
+        docList.append(wordList)
+        fullText.extend(wordList)
+        classList.append(1)
+        wordList = textParse(open('email/ham/%d.txt' %i).read())
+        docList.append(wordList)
+        fullText.extend(wordList)
+        classList.append(0)
+    vocabList = createVocabList(docList)
+    trainingSet = range(50); testSet=[]
+    for i in range(10):
+        randIndex = int(random.uniform(0,len(trainingSet)))
+        testSet.append(trainingSet[randIndex])
+        del(trainingSet[randIndex])
+    trainMat=[];trainClasses=[]
+    for docIndex in trainingSet:
+        trainMat.append(setOfWords2Vec(vocabList,docList[docIndex]))
+        trainClasses.append(classList[docIndex])
+    p0v,p1v,pa=trainNB0(trainMat,array(trainClasses)) #need exchange to array
+    errorcnt = 0
+    for docIndex in testSet:
+        wordVec = setOfWords2Vec(vocabList,docList[docIndex])
+        if classifyNB(wordVec,p0v,p1v,pa) != classList[docIndex]:
+            errorcnt+=1
+            print docList[docIndex]
+    print 'the error rate is : ',float(errorcnt)/len(testSet)
+
 def testNB():
     posts,classes = loadDataSet()
     vocabList = createVocabList(posts)
@@ -62,8 +102,8 @@ def testNB():
     testEntry =['love','my','dalmation']
     thisDoc = array(setOfWords2Vec(vocabList,testEntry))
     print testEntry,'class as ',classifyNB(thisDoc,p0v,p1v,pa)
-    testEntry = ['stupid']
+    testEntry = ['stupid','stupid']
     thisDoc = array(setOfWords2Vec(vocabList, testEntry))
     print testEntry, 'class as ', classifyNB(thisDoc, p0v, p1v, pa)
 
-testNB()
+spamTest()
